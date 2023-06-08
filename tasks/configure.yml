@@ -1,0 +1,44 @@
+---
+
+- name: Create node exporter group
+  group:
+    name: "{{ node_exporter_group }}"
+    state: present
+  tags:
+    - node_exporter
+    - user
+
+- name: Create node exporter user
+  user:
+    name: "{{ node_exporter_user }}"
+    group: "{{ node_exporter_group }}"
+    create_home: yes
+    home: "/var/lib/{{ node_exporter_user }}"
+  tags:
+    - node_exporter
+    - user
+
+# - name: Create node exporter sysconfig configuration
+#   template:
+#     src: sysconfig.j2
+#     dest: ""
+
+- name: Create node exporter systemd configuration
+  template:
+    src: node_exporter.service.j2
+    dest: "{{ systemd_conf_path }}/node_exporter.service"
+    owner: "{{ node_exporter_user }}"
+    group: "{{ node_exporter_group }}"
+  notify: Restart node_exporter
+  tags:
+    - node_exporter
+    - configs
+
+- name: Create a symlink to node exporter systemd configuration
+  file:
+    src: "{{ systemd_conf_path }}/node_exporter.service"
+    path: "{{ systemd_etc_conf_path }}/node_exporter.service"
+    state: link
+  tags:
+    - node_exporter
+    - configs

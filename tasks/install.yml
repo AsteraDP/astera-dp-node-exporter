@@ -1,0 +1,36 @@
+---
+
+- name: Node exporter archive downloading
+  get_url:
+    url: "{{ node_exporter_url }}"
+    dest: /tmp/
+  tags:
+    - node_exporter
+
+- name: Extract node exporter from archive
+  unarchive:
+    src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "/tmp/"
+    remote_src: yes
+  tags:
+    - node_exporter
+
+- name: Copy node exporter binary file
+  copy:
+    src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
+    dest: "{{ node_exporter_bin_path }}/node_exporter"
+    remote_src: yes
+    owner: "{{ node_exporter_user }}"
+    group: "{{ node_exporter_group }}"
+    mode: '0755'
+  tags:
+    - node_exporter
+
+- name: Enable and start node exporter systemd service
+  systemd:
+    name: node_exporter
+    enabled: yes
+    daemon_reload: yes
+    state: started
+  tags:
+    - node_exporter

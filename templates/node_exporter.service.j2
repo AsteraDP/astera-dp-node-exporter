@@ -1,0 +1,10 @@
+[Unit]
+Description=Node Exporter
+
+[Service]
+User=node_exporter
+#EnvironmentFile=/etc/sysconfig/node_exporter
+ExecStart={{ node_exporter_bin_path }}/node_exporter --collector.textfile.directory /var/lib/node_exporter/textfile_collector --collector.systemd --collector.processes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+---
+
+node_exporter_bin_path: /usr/sbin
+node_exporter_group: "{{ node_exporter_user }}"
+node_exporter_user: node_exporter
+node_exporter_version: 1.4.0
+
+node_exporter_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+
+node_exporter_checksums:
+  '1.4.0': "sha256:e77ff1b0a824a4e13f82a35d98595fe526849c09e3480d0789a56b72242d2abc"
+
+
+systemd_conf_path: /lib/systemd/system
+systemd_etc_conf_path: /etc/systemd/system/multi-user.target.wants
